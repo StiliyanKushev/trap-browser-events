@@ -1,0 +1,14 @@
+{
+  "name": "dotnet-addon",
+  "version": "1.0.0",
+    "description": "",
+  "main": "TrapBrowserEvents.js",
+    "scripts": {
+        "build-tgz": "npm pack"
+    },
+  "author": "",
+    "license": "ISC",
+    "files": [
+        "./TrapBrowserEvents.node"
+    ]
+}

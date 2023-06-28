@@ -1,26 +1,37 @@
 {
-  "name": "trapbrowserevents",
-  "version": "1.0.0",
-  "author": "Stiliyan Kushev",
-  "description": "A native addon made with C# that traps browser behavior and notifies the JS side.",
-  "license": "ISC",
-  "keywords": [
-    "c#",
-    "aot",
-    "trap",
-    "browser",
-    "nodejs",
-    "js",
-    "ts"
-  ],
-  "main": "./napi-lib/index.ts",
-  "scripts": {
-    "build-dotnet": "dotnet publish /p:NativeLib=Shared -r win-x64 -c Release",
-    "build-node": "tsc --build",
-    "build": "npm run build-dotnet && npm run build-node"
-  },
-  "devDependencies": {
-    "@types/node": "^20.3.1",
-    "typescript": "^5.1.3"
-  }
+    "name": "trapbrowserevents",
+    "version": "1.0.0",
+    "author": "Stiliyan Kushev",
+    "description": "A native addon made with C# that traps browser behavior and notifies the JS side.",
+    "license": "ISC",
+    "keywords": [
+        "c#",
+        "aot",
+        "trap",
+        "browser",
+        "nodejs",
+        "js",
+        "ts"
+    ],
+    "main": "./out/index.js",
+    "scripts": {
+        "build-dotnet": "dotnet publish /p:NativeLib=Shared -r win-x64 -c Release",
+        "build-addon": "npm --prefix ./addon run build-tgz && npm i ./addon/dotnet-addon-1.0.0.tgz",
+        "build-node": "del .\\out\\*.d.ts && tsc --build --force",
+        "build": "npm run build-dotnet && npm run build-addon && npm run build-node"
+    },
+    "devDependencies": {
+        "@types/node": "^20.3.1",
+        "typescript": "^5.1.5"
+    },
+    "dependencies": {
+        "dotnet-addon": "file:addon/dotnet-addon-1.0.0.tgz"
+    },
+    "bundledDependencies": true,
+    "files": [
+        "out/"
+    ],
+    "bundleDependencies": [
+        "dotnet-addon"
+    ]
 }

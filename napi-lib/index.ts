@@ -1,4 +1,7 @@
-import * from '../bin/Release/net7.0/win-x64/publish/TrapBrowserEvents'
+import {
+    enableListenerType,
+    disableListenerType
+} from 'dotnet-addon';
 
 module TrapBrowserEvents {
     export type eventTypes = 'contextMenuClicked' | 'extensionMenuClicked'
@@ -40,6 +43,7 @@ export class TrapBrowserEvents {
             case "extensionMenuClicked": {
                 enableListenerType(
                     type, () => this.listeners.dispatchEvent(new Event(type)))
+                break;
             }
             default: {
                 throw new Error(`Error: cannot enable ${type}, unknown!`)
@@ -56,6 +60,7 @@ export class TrapBrowserEvents {
             case "contextMenuClicked":
             case "extensionMenuClicked": {
                 disableListenerType(type)
+                break;
             }
             default: {
                 throw new Error(`Error: cannot disable ${type}, unknown!`)

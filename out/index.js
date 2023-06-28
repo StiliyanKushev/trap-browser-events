@@ -1,8 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TrapBrowserEvents = void 0;
-require("../bin/Release/net7.0/win-x64/publish/TrapBrowserEvents");
-var node_api_dotnet_1 = require("node-api-dotnet");
+var dotnet_addon_1 = require("dotnet-addon");
 var TrapBrowserEvents = exports.TrapBrowserEvents = /** @class */ (function () {
     function TrapBrowserEvents() {
     }
@@ -31,7 +30,8 @@ var TrapBrowserEvents = exports.TrapBrowserEvents = /** @class */ (function () {
         switch (type) {
             case "contextMenuClicked":
             case "extensionMenuClicked": {
-                (0, node_api_dotnet_1.enableListenerType)(type, function () { return _this.listeners.dispatchEvent(new Event(type)); });
+                (0, dotnet_addon_1.enableListenerType)(type, function () { return _this.listeners.dispatchEvent(new Event(type)); });
+                break;
             }
             default: {
                 throw new Error("Error: cannot enable ".concat(type, ", unknown!"));
@@ -46,7 +46,8 @@ var TrapBrowserEvents = exports.TrapBrowserEvents = /** @class */ (function () {
         switch (type) {
             case "contextMenuClicked":
             case "extensionMenuClicked": {
-                (0, node_api_dotnet_1.disableListenerType)(type);
+                (0, dotnet_addon_1.disableListenerType)(type);
+                break;
             }
             default: {
                 throw new Error("Error: cannot disable ".concat(type, ", unknown!"));
