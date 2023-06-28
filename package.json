@@ -16,7 +16,8 @@
   "main": "./napi-lib/index.ts",
   "scripts": {
     "build-dotnet": "dotnet publish /p:NativeLib=Shared -r win-x64 -c Release",
-    "build-node": "tsc --build"
+    "build-node": "tsc --build",
+    "build": "npm run build-dotnet && npm run build-node"
   },
   "devDependencies": {
     "@types/node": "^20.3.1",

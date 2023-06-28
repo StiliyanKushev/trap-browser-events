@@ -1,16 +1,19 @@
 {
-    "compilerOptions": {
-        "allowSyntheticDefaultImports": true,
-        "outDir": "./out",
-        "module": "NodeNext",
-        "strict": true,
-        "noImplicitAny": true,
-        "strictNullChecks": true,
-        "target": "ES5",
-        "moduleResolution": "NodeNext"
-    },
-    "ts-node": {
-        "esm": true,
-        "experimentalSpecifierResolution": "node"
-    }
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "outDir": "./out",
+    "module": "NodeNext",
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "target": "ES5",
+    "moduleResolution": "NodeNext"
+  },
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node"
+  },
+  "exclude": [
+    "bin"
+  ]
 }
