@@ -1,10 +1,13 @@
 import {
     enableListenerType,
-    disableListenerType
+    disableListenerType,
+    targetProcessName,
+    releaseProcessName
 } from 'dotnet-addon';
 
-module TrapBrowserEvents {
-    export type eventTypes = 'contextMenuClicked' | 'extensionMenuClicked'
+export enum EventTypes {
+    CONTEXT_MENU_CLICKED,
+    EXTENSION_MENU_CLICKED
 }
 
 export class TrapBrowserEvents {
@@ -20,8 +23,8 @@ export class TrapBrowserEvents {
      * @param type
      * @param callback
      */
-    public static on(type: TrapBrowserEvents.eventTypes, callback: EventListener): void {
-        this.listeners.addEventListener(type, callback)    
+    public static on(type: EventTypes, callback: EventListener): void {
+        this.listeners.addEventListener(type.toString(), callback)    
     }
 
     /**
@@ -29,22 +32,22 @@ export class TrapBrowserEvents {
      * @param type
      * @param callback
      */
-    public static off(type: TrapBrowserEvents.eventTypes, callback: EventListener): void {
-        this.listeners.removeEventListener(type, callback)    
+    public static off(type: EventTypes, callback: EventListener): void {
+        this.listeners.removeEventListener(type.toString(), callback)
     }
 
-    private static enabledTypes = new Set <TrapBrowserEvents.eventTypes>();
+    private static enabledTypes = new Set<EventTypes>();
 
     /**
      * @description Begins capturing event data using c# addon.
      * @param type
      */
-    public static enableListener(type: TrapBrowserEvents.eventTypes) {
+    public static enableListener(type: EventTypes) {
         switch (type) {
-            case "contextMenuClicked":
-            case "extensionMenuClicked": {
+            case EventTypes.CONTEXT_MENU_CLICKED:
+            case EventTypes.EXTENSION_MENU_CLICKED: {
                 if (!TrapBrowserEvents.enabledTypes.has(type)) {
-                    TrapBrowserEvents.enabledTypes.add(type);
+                    TrapBrowserEvents.enabledTypes.add(type)
                 }
 
                 let that = this;
@@ -52,13 +55,13 @@ export class TrapBrowserEvents {
                 (function wrapper() {
                     if (TrapBrowserEvents.enabledTypes.has(type)) {
                         enableListenerType(type).then(() => {
-                            that.listeners.dispatchEvent(new Event(type))
+                            that.listeners.dispatchEvent(new Event(type.toString()))
                             wrapper()
                         })
                     }
                 })()
 
-                break;
+                break
             }
             default: {
                 throw new Error(`Error: cannot enable ${type}, unknown!`)
@@ -70,19 +73,37 @@ export class TrapBrowserEvents {
      * @description Stops capturing event data from c# addon.
      * @param type
      */
-    public static disableListener(type: TrapBrowserEvents.eventTypes) {
+    public static disableListener(type: EventTypes) {
         switch (type) {
-            case "contextMenuClicked":
-            case "extensionMenuClicked": {
+            case EventTypes.CONTEXT_MENU_CLICKED:
+            case EventTypes.EXTENSION_MENU_CLICKED: {
                 if (TrapBrowserEvents.enabledTypes.has(type)) {
-                    TrapBrowserEvents.enabledTypes.delete(type);
+                    TrapBrowserEvents.enabledTypes.delete(type)
                 }
                 disableListenerType(type)
-                break;
+                break
             }
             default: {
                 throw new Error(`Error: cannot disable ${type}, unknown!`)
             }
         }
+    }
+
+    /**
+     * @description When called, the process name will 
+     * be targeted by the window hooks.
+     * @param processName
+     */
+    public static targetProcessName(processName: string) {
+        targetProcessName(processName);
+    }
+
+    /**
+     * @description When called, the process name will 
+     * NOT be targeted by the window hooks.
+     * @param processName
+     */
+    public static releaseProcessName(processName: string) {
+        releaseProcessName(processName);
     }
 }

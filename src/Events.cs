@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.InteropServices;
-using TrapBrowserEvents.listeners;
+using TrapBrowserEvents.src;
 
 namespace TrapBrowserEvents
 {
