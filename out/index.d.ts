@@ -20,6 +20,7 @@ export declare class TrapBrowserEvents {
      * @param callback
      */
     static off(type: TrapBrowserEvents.eventTypes, callback: EventListener): void;
+    private static enabledTypes;
     /**
      * @description Begins capturing event data using c# addon.
      * @param type

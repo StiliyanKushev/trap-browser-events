@@ -26,11 +26,21 @@ var TrapBrowserEvents = exports.TrapBrowserEvents = /** @class */ (function () {
      * @param type
      */
     TrapBrowserEvents.enableListener = function (type) {
-        var _this = this;
         switch (type) {
             case "contextMenuClicked":
             case "extensionMenuClicked": {
-                (0, dotnet_addon_1.enableListenerType)(type, function () { return _this.listeners.dispatchEvent(new Event(type)); });
+                if (!TrapBrowserEvents.enabledTypes.has(type)) {
+                    TrapBrowserEvents.enabledTypes.add(type);
+                }
+                var that_1 = this;
+                (function wrapper() {
+                    if (TrapBrowserEvents.enabledTypes.has(type)) {
+                        (0, dotnet_addon_1.enableListenerType)(type).then(function () {
+                            that_1.listeners.dispatchEvent(new Event(type));
+                            wrapper();
+                        });
+                    }
+                })();
                 break;
             }
             default: {
@@ -46,6 +56,9 @@ var TrapBrowserEvents = exports.TrapBrowserEvents = /** @class */ (function () {
         switch (type) {
             case "contextMenuClicked":
             case "extensionMenuClicked": {
+                if (TrapBrowserEvents.enabledTypes.has(type)) {
+                    TrapBrowserEvents.enabledTypes.delete(type);
+                }
                 (0, dotnet_addon_1.disableListenerType)(type);
                 break;
             }
@@ -60,5 +73,6 @@ var TrapBrowserEvents = exports.TrapBrowserEvents = /** @class */ (function () {
      * @description all internal listeners described here.
      */
     TrapBrowserEvents.listeners = new EventTarget();
+    TrapBrowserEvents.enabledTypes = new Set();
     return TrapBrowserEvents;
 }());

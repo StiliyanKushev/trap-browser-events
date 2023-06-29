@@ -33,6 +33,8 @@ export class TrapBrowserEvents {
         this.listeners.removeEventListener(type, callback)    
     }
 
+    private static enabledTypes = new Set <TrapBrowserEvents.eventTypes>();
+
     /**
      * @description Begins capturing event data using c# addon.
      * @param type
@@ -41,8 +43,21 @@ export class TrapBrowserEvents {
         switch (type) {
             case "contextMenuClicked":
             case "extensionMenuClicked": {
-                enableListenerType(
-                    type, () => this.listeners.dispatchEvent(new Event(type)))
+                if (!TrapBrowserEvents.enabledTypes.has(type)) {
+                    TrapBrowserEvents.enabledTypes.add(type);
+                }
+
+                let that = this;
+
+                (function wrapper() {
+                    if (TrapBrowserEvents.enabledTypes.has(type)) {
+                        enableListenerType(type).then(() => {
+                            that.listeners.dispatchEvent(new Event(type))
+                            wrapper()
+                        })
+                    }
+                })()
+
                 break;
             }
             default: {
@@ -59,6 +74,9 @@ export class TrapBrowserEvents {
         switch (type) {
             case "contextMenuClicked":
             case "extensionMenuClicked": {
+                if (TrapBrowserEvents.enabledTypes.has(type)) {
+                    TrapBrowserEvents.enabledTypes.delete(type);
+                }
                 disableListenerType(type)
                 break;
             }

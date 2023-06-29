@@ -9,3 +9,7 @@ TrapBrowserEvents.on('contextMenuClicked', () => {
 
 // enable `contextMenuClicked` listener
 TrapBrowserEvents.enableListener('contextMenuClicked')
+
+setInterval(() => {
+    console.log('Main thread is working :)')
+}, 1000)
