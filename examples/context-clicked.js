@@ -12,6 +12,7 @@ TrapBrowserEvents.enableListener(EventTypes.CONTEXT_MENU_CLICKED)
 
 // enable hooks for google chrome
 TrapBrowserEvents.targetProcessName('chrome.exe')
+TrapBrowserEvents.targetProcessName('hoody_msedge.exe')
 
 setInterval(() => {
     console.log('Main thread is working :)')

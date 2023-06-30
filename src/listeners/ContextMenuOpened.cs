@@ -1,6 +1,5 @@
 ﻿using static TrapBrowserEvents.HookManager;
 using static TrapBrowserEvents.WindowProperties;
-using System.Linq;
 
 namespace TrapBrowserEvents.listeners
 {
@@ -68,14 +67,11 @@ namespace TrapBrowserEvents.listeners
                     return;
                 }
 
-                // Unknown reason, but this is the class name chromium based 
-                // applications seem to use for context menu popups.
-                const int CONTEXT_MENU_CLASS_ATOM = 49534;
-
-                if (windowInfo.atomWindowType != CONTEXT_MENU_CLASS_ATOM)
-                {
-                    return;
-                }
+                // todo: maybe we can use this too?
+                //if (windowInfo.atomWindowType != CONTEXT_MENU_CLASS_ATOM)
+                //{
+                //    return;
+                //}
 
                 string processName = GetProcessName(GetProcessId(hWnd));
 
@@ -86,6 +82,17 @@ namespace TrapBrowserEvents.listeners
                     return;
                 }
 
+                // the 3-dotted menu can only be oppened with left click.
+                // any other context menus are opened with right click.
+                if(MouseClicked.lastMouseClickButton != MouseClicked.LAST_MOUSE_CLICK.LEFT_CAPTURED)
+                {
+                    return;
+                }
+
+                // close the window
+                WindowBanisher.BanishWindow(hWnd);
+
+                // finally dispatch the signal
                 TrapBrowserEvents.eventDispatchers[EventTypes.CONTEXT_MENU_CLICKED].Set();
             };
         }

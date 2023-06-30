@@ -8,6 +8,7 @@ namespace TrapBrowserEvents.src
         public static void InitializeHookEventListeners()
         {
             ContextMenuOpened.InitializeHookHandler();
+            MouseClicked.InitializeHookHandler();
         }
     }
 }
